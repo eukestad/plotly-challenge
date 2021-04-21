@@ -8,17 +8,8 @@ var names = incomingData.names;
 
 var demos = incomingData.metadata;
 
-// filter functions
-function filterSamples (idNumber) {
-    return samples.filter(sample => sample.id === idNumber);
-};
-
-function filterDemos (idNumber) {
-    return demos.filter(demo => demo.id === idNumber);
-};
-
 // populate drop down
-var idDropdown = d3.select('#selDataset')
+var idDropdown = d3.select('#selDataset');
 
 var idNumber = idDropdown.property("value");
 
@@ -26,11 +17,26 @@ names.forEach((item) => {
     idDropdown.append("option").text(item).property("value", item);
   });
 
+// filter functions
+function filterSamples (idNumber) {
+    return samples.filter(sample => sample.id === idNumber);
+};
+
+function filterDemos (idNumber) {
+    return demos.filter(demo => demo.id === +idNumber);
+};
+
 //handle events
 function optionChanged(idNumber) {
-    console.log(idNumber);
+    
+    idFilter = idNumber;
+    console.log(idFilter);
+
+    demoData = filterDemos(idFilter);
     bellyData = filterSamples(idNumber);
-    demoData = filterDemos(idNumber);
+
+
+    // demoData = demos.filter(demo => demo.id === idNumber)
     console.log(demoData);
 
     fillDemos(demoData);
@@ -49,7 +55,7 @@ function fillDemos(dataSet) {
     var demoPanel = d3.select("#sample-metadata");
     var demoList = [];
 
-    Object.entries(dataSet).forEach(([key,value]) => {
+    Object.entries(dataSet[0]).forEach(([key,value]) => {
         demoList.push(`${key}: ${value}`);
     });
     console.log(demoList)
